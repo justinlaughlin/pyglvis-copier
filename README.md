@@ -1,204 +1,76 @@
-# Interactive GLVis Jupyter Widget
+# pyglvis
 
-<!-- Badges generated at https://mybinder.readthedocs.io/en/latest/howto/badges.html -->
-[![badge](examples/basic.svg "Basic GLVis + Jupyter Example")](https://mybinder.org/v2/gh/GLVis/pyglvis/HEAD?filepath=examples%2Fbasic.ipynb)
-[![badge](examples/plot.svg "Plot grid functions")](https://mybinder.org/v2/gh/GLVis/pyglvis/HEAD?filepath=examples%2Fplot.ipynb)
-[![badge](examples/ex1.svg "MFEM's Example 1")](https://mybinder.org/v2/gh/GLVis/pyglvis/HEAD?filepath=examples%2Fex1.ipynb)
-[![badge](examples/ex9.svg "MFEM's Example 9")](https://mybinder.org/v2/gh/GLVis/pyglvis/HEAD?filepath=examples%2Fex9.ipynb)
+[![Github Actions Status](/workflows/Build/badge.svg)](/actions/workflows/build.yml)
+A JupyterLab extension.
 
-This repository contains a [Jupyter](https://jupyter.org/) widget for the [GLVis](https://glvis.org/) finite element
-visualization tool based on the [glvis-js](https://github.com/GLVis/glvis-js) JavaScript/WebAssembly library.
+## Requirements
 
-## Usage
+- JupyterLab >= 4.0.0
 
-```python
-from glvis import glvis
+## Install
 
-glvis(data[, width=640, height=480])
-
-# or assign if you want to update later
-g = glvis(data)
-# run a cell with `g` to show it
-g
-```
-
-The `data` object and be one of:
-
-- a `str`, in the format of `*.saved` files
-- a `Mesh`, defined in [PyMFEM](https://github.com/mfem/pymfem)
-- a `(Mesh, GridFunction)` tuple, defined in [PyMFEM](https://github.com/mfem/pymfem)
-
-[PyMFEM](https://github.com/mfem/pymfem) can be installed with `pip install mfem --no-binary mfem`.
-
-
-Once you have a `glvis` object there are a few methods that can used to update the
-visualization:
-```python
-# show a new Mesh/GridFunction, resets keys
-g.plot(data)
-# show an updated visualization with the same `Mesh` and `GridFunction`
-# dimensions, preserves keys
-g.update(data)
-# change the image size
-g.set_size(width, height)
-# force the widget to render. if the widget isn't the last statement in a cell it
-# will not be shown without this. see ex9.ipynb
-g.render()
-```
-
-See the [examples](examples/) directory for additional examples. To test those locally, start a Jupyter notebook server with
-
-```
-jupyter notebook
-```
-
-## Installation
-
-The GLVis Jupyter widget can be simply installed with `pip`:
-
-```
-pip install glvis
-```
-
-It order for the installation to be useful you must enable the extension for one or both
-of the [Classic Notebook](https://jupyter-notebook.readthedocs.io/en/stable/) and
-[Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/), see the next two sections:
-
-### Jupyter Notebook
-
-To use the widget with the basic Notebook enable it with `jupyter nbextension enable`:
-
-```
-jupyter nbextension enable --py glvis
-```
-
-After enabling the extension you can verify you're good to go with:
-
-```
-jupyter nbextension list
-```
-
-The output should be something like:
-
-```
-Known nbextensions:
-  config dir: path/to/nbconfig
-    notebook section
-      glvis-jupyter/extension  enabled
-      - Validating: OK
-  <possibly a different config dir>
-      jupyter-js-widgets/extension  enabled
-      - Validating: OK
-```
-
-If `glvis-jupyter` and `jupyter-js-widgets` are not both listed, try the following:
-
-```
-jupyter nbextension install --user --py glvis
-jupyter nbextension enable --user --py glvis
-jupyter nbextension install --user --py widgetsnbextension
-jupyter nbextension enable --user --py widgetsnbextension
-```
-You may also need to run these if you have upgraded to a newer version of the GLVis Jupyter widget.
-
-### Jupyter Lab
-
-[JupyterLab](https://jupyterlab.readthedocs.io) requires another set of install commands:
-
-```
-jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
-jupyter labextension install glvis-jupyter
-```
-
-## Development
-
-Development installation requires `npm`.
-
-If you want to test a new version of `glvis`:
-
-1. Bump the version in _pyglvis/js/package.json_ and _glvis-js/package.json_
-2. `npm install path/to/glvis-js`
-
-
-Each time you update stuff in _pyglvis/js/src_:
-
-1. `npm install`
-2. `npx webpack`
-
-
-Once:
-
-```
-git clone https://github.com/glvis/pyglvis.git
-cd pyglvis
-pip install -e .
-```
-
-### Developing in Jupyter Notebook
-
-```
-jupyter nbextension install --py --symlink --sys-prefix glvis
-jupyter nbextension enable --py --sys-prefix glvis
-```
-
-### Developing in Jupyter Lab
+To install the extension, execute:
 
 ```bash
-jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
-# I believe you need node in the path Lab uses for this to work, I see an extension load error
-# in a context where I don't have it:
-# Failed to load resource: the server responded with a status of 500 (Internal Server Error)
-#   lab/api/extensions?1610138347763
-# Which is just a python stacktrace, ending with:
-#   raise ValueError(msg)
-#   ValueError: Please install Node.js and npm before continuing installation.
-jupyter labextension link ./js
+pip install pyglvis
 ```
 
+## Uninstall
 
-### Troubleshooting
-
-If you run into errors related to node/npm that aren't helpful try:
+To remove the extension, execute:
 
 ```bash
-cd pyglvis
-make clean
-cd js
-# fix errors in these steps, run `make -C .. clean` each time
-npm install
-npx webpack
+pip uninstall pyglvis
 ```
 
-## Releasing
+## Contributing
 
-### Releasing a new version of glvis-jupyter on NPM:
+### Development install
 
-- Update the required version of `glvis` in `js/package.json`
+Note: You will need NodeJS to build the extension package.
 
-- Update the version in `js/package.json`
+The `jlpm` command is JupyterLab's pinned version of
+[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
+`yarn` or `npm` in lieu of `jlpm` below.
 
 ```bash
-# clean out the `dist` and `node_modules` directories
-git clean -fdx
-npm install
-npm publish
+# Clone the repo to your local environment
+# Change directory to the pyglvis directory
+# Install package in development mode
+pip install -e "."
+# Link your development version of the extension with JupyterLab
+jupyter labextension develop . --overwrite
+# Rebuild extension Typescript source after making changes
+jlpm build
 ```
 
-### Releasing a new version of glvis on PyPI:
+You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
 
-- Update `glvis/_version.py`
-   - Set release version
-   - Update `extension_version` to match `js/package.json`
-
-- `git add` and `git commit` changes
-  - `glvis/_version.py`, `js/package.json`, and `js/package-lock.js`
-
-
-You will need [twine](https://pypi.org/project/twine/) to publish to PyPI, install with `pip`.
-
+```bash
+# Watch the source directory in one terminal, automatically rebuilding when needed
+jlpm watch
+# Run JupyterLab in another terminal
+jupyter lab
 ```
-python setup.py sdist bdist_wheel
-twine upload dist/*
-git tag -a X.X.X -m 'comment'
-git push --tags
+
+With the watch command running, every saved change will immediately be built locally and available in your running JupyterLab. Refresh JupyterLab to load the change in your browser (you may need to wait several seconds for the extension to be rebuilt).
+
+By default, the `jlpm build` command generates the source maps for this extension to make it easier to debug using the browser dev tools. To also generate source maps for the JupyterLab core extensions, you can run the following command:
+
+```bash
+jupyter lab build --minimize=False
 ```
+
+### Development uninstall
+
+```bash
+pip uninstall pyglvis
+```
+
+In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
+command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
+folder is located. Then you can remove the symlink named `glvis-jupyter` within that folder.
+
+### Packaging the extension
+
+See [RELEASE](RELEASE.md)
